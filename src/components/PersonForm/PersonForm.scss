@@ -1,0 +1,26 @@
+.form {
+    &__label {
+        color: #777;
+        font-weight: 400;
+        font-size: 16px;
+    }
+
+    &__field {
+        width: 200px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__error {
+        text-align: end;
+        color: #f44336;
+    }
+
+    &__input {
+        outline: none;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #2f2f2f;
+    }
+
+}
