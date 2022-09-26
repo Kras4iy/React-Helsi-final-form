@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import { Button } from '@mui/material';
 import React from 'react';
 import { Form, Field } from 'react-final-form';
@@ -8,7 +6,7 @@ import './PersonForm.scss';
 
 const required = value => (value ? undefined : 'Це поле є обов\'язковим');
 
-const minLenght = min => (value) => {
+const minLength = min => (value) => {
   if (value && (`${value}`).length < min) {
     return `Мінімальна кількість символів ${min}`;
   }
@@ -32,7 +30,9 @@ const onlyLetters = (value) => {
 };
 
 const onlyNumbers = (value) => {
-  if (value && !/^\d+$/g.test(value)) {
+  const regex = /^\d+$/g;
+
+  if (value && !regex.test(value)) {
     return 'Повинні бути лише цифри';
   }
 
@@ -44,16 +44,19 @@ const isSelected = value => (
 );
 
 const isPhoneNumber = (value) => {
-  // eslint-disable-next-line max-len
-  if (value && !/(\+38)?[(]?\d{3}[)\-\s]?\d{3}[\s-]?\d{2}[\s-]?\d{2}/g.test(value)) {
+  const regex = /(\+38)?[(]?\d{3}[)\-\s]?\d{3}[\s-]?\d{2}[\s-]?\d{2}/g;
+
+  if (value && !regex.test(value)) {
     return 'некоректний телефонний номер';
   }
 
-  return undefined;
+  return null;
 };
 
 const isEmailCorrect = (value) => {
-  if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (value && !regex.test(value)) {
     return 'Некоректний email';
   }
 
@@ -61,7 +64,9 @@ const isEmailCorrect = (value) => {
 };
 
 const isPassport = (value) => {
-  if (value && !/\d{9}|[a-zA-Z]{2}\d{6}/g.test(value)) {
+  const regex = /\d{9}|[a-zA-Z]{2}\d{6}/g;
+
+  if (value && !regex.test(value)) {
     return 'Некоректні дані';
   }
 
@@ -127,7 +132,9 @@ const correctDate = (treshold, futureTime = false) => (value) => {
 };
 
 const unzr = (value) => {
-  if (value && !/\d{8}[-]\d{4}/g.test(value)) {
+  const regex = /\d{8}[-]\d{4}/g;
+
+  if (value && !regex.test(value)) {
     return 'Некоректні дані';
   }
 
@@ -156,22 +163,29 @@ export const PersonForm = () => {
                 validate={composeValidators(
                   required,
                   onlyLetters,
-                  minLenght(3),
+                  minLength(3),
                   maxLength(20),
                 )}
               >
                 {({ input, meta }) => (
                   <>
-                    <label className="form__label">
+                    <label
+                      className="form__label"
+                      htmlFor="secondName"
+                    >
                       Прізвище*
                     </label>
                     <input
                       {...input}
                       type="text"
                       className="form__input"
+                      id="secondName"
                     />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
@@ -187,12 +201,23 @@ export const PersonForm = () => {
               >
                 {({ input, meta }) => (
                   <>
-                    <label className="form__label">
+                    <label
+                      className="form__label"
+                      htmlFor="firstName"
+                    >
                       Ім&apos;я*
                     </label>
-                    <input {...input} type="text" className="form__input" />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    <input
+                      {...input}
+                      type="text"
+                      className="form__input"
+                      id="firstName"
+                    />
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
@@ -201,7 +226,7 @@ export const PersonForm = () => {
               <Field
                 name="thirdName"
                 validate={composeValidators(
-                  minLenght(3),
+                  minLength(3),
                   onlyLetters,
                   maxLength(20),
                 )}
@@ -213,8 +238,11 @@ export const PersonForm = () => {
                       isRequired={false}
                       label="По батькові"
                     />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
@@ -223,7 +251,7 @@ export const PersonForm = () => {
               <Field
                 name="RNOKPP"
                 validate={composeValidators(
-                  minLenght(10),
+                  minLength(10),
                   onlyNumbers,
                   maxLength(10),
                 )}
@@ -235,8 +263,11 @@ export const PersonForm = () => {
                       isRequired={false}
                       label="РНОКПП(ІПН)"
                     />
-                    { meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    { meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
@@ -251,7 +282,10 @@ export const PersonForm = () => {
               >
                 {({ input, meta }) => (
                   <>
-                    <label className="form__label">
+                    <label
+                      className="form__label"
+                      htmlFor="birthday"
+                    >
                       Дата народження
                     </label>
                     <input
@@ -259,21 +293,29 @@ export const PersonForm = () => {
                       type="text"
                       className="form__input"
                       placeholder="30.03.2003"
+                      id="birthday"
                     />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
             </div>
             <div className="form__item grid__item-5-6">
-              <label className="form__label">
+              <label
+                className="form__label"
+                htmlFor="sex"
+              >
                 Стать
               </label>
               <Field
                 name="sex"
                 component="select"
                 className="form__input"
+                id="sex"
               >
                 <option value="select">--Вибрати--</option>
                 <option value="male">Чоловік</option>
@@ -291,7 +333,7 @@ export const PersonForm = () => {
                 validate={composeValidators(
                   required,
                   onlyLetters,
-                  minLenght(3),
+                  minLength(3),
                   maxLength(20),
                 )
                 }
@@ -304,8 +346,11 @@ export const PersonForm = () => {
                       className="form__input"
                       placeholder="Країна народження*"
                     />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
@@ -317,7 +362,7 @@ export const PersonForm = () => {
                 validate={composeValidators(
                   required,
                   onlyLetters,
-                  minLenght(3),
+                  minLength(3),
                   maxLength(20),
                 )
                 }
@@ -330,21 +375,28 @@ export const PersonForm = () => {
                       className="form__input"
                       placeholder="Місце народження*"
                     />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
             </div>
 
             <div className="form__item grid__item-1-3">
-              <label className="form__label">
+              <label
+                className="form__label"
+                htmlFor="preferences"
+              >
                 Бажаний спосіб зв&apos;язку із пацієнтом
               </label>
               <Field
                 name="preferences"
                 component="select"
                 className="form__input"
+                id="preferences"
               >
                 <option value="select">--Вибрати--</option>
                 <option value="email">Електронною поштою</option>
@@ -363,7 +415,7 @@ export const PersonForm = () => {
                 name="secretWord"
                 validate={composeValidators(
                   required,
-                  minLenght(6),
+                  minLength(6),
                 )}
               >
                 {({ input, meta }) => (
@@ -374,8 +426,11 @@ export const PersonForm = () => {
                       className="form__input form__input-without-title"
                       placeholder="Секретне слово (не менше 6 символів)*"
                     />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
@@ -384,11 +439,18 @@ export const PersonForm = () => {
             <div className="form__item grid__item-1-3">
               <Field
                 name="phone"
-                validate={isPhoneNumber}
+                validate={composeValidators(
+                  isPhoneNumber,
+                  maxLength(13),
+                  minLength(10),
+                )}
               >
                 {({ input, meta }) => (
                   <>
-                    <label className="form__label">
+                    <label
+                      className="form__label"
+                      htmlFor="phone"
+                    >
                       Контактний номер телефону
                     </label>
                     <input
@@ -396,9 +458,13 @@ export const PersonForm = () => {
                       type="text"
                       className="form__input"
                       placeholder="+38 (__)___-__-__"
+                      id="phone"
                     />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
@@ -411,7 +477,10 @@ export const PersonForm = () => {
               >
                 {({ input, meta }) => (
                   <>
-                    <label className="form__label">
+                    <label
+                      className="form__label"
+                      htmlFor="email"
+                    >
                       Адреса електронної пошти
                     </label>
                     <input
@@ -419,9 +488,13 @@ export const PersonForm = () => {
                       type="email"
                       className="form__input"
                       placeholder="example@example.com"
+                      id="email"
                     />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
@@ -434,15 +507,21 @@ export const PersonForm = () => {
 
           <section className="form__section grid">
             <div className="form__item grid__item-1-3">
-              <label className="form__label">
+              <label
+                className="form__label"
+                htmlFor="document"
+              >
                 Тип документу*
               </label>
               <Field
                 name="document"
                 component="select"
                 className="form__input"
+                id="document"
               >
-                <option value="select">--Вибрати--</option>
+                <option value="select">
+                  --Вибрати--
+                </option>
                 <option value="document_1">
                   Посвідчення особи, яка потребує додаткового захисту
                 </option>
@@ -462,7 +541,7 @@ export const PersonForm = () => {
                   Посвіка на проживання
                 </option>
                 <option value="document_7">
-                  Тимчасове посвідчення громадянини України
+                  Тимчасове посвідчення громадянина України
                 </option>
 
               </Field>
@@ -477,7 +556,11 @@ export const PersonForm = () => {
             <div className="form__item grid__item-4-6">
               <Field
                 name="seria"
-                validate={isPassport}
+                validate={composeValidators(
+                  isPassport,
+                  minLength(8),
+                  maxLength(9),
+                )}
               >
                 {({ input, meta }) => (
                   <>
@@ -487,8 +570,11 @@ export const PersonForm = () => {
                       className="form__input form__input-without-title "
                       placeholder="Серія (за наявності),номер.Приклад: AA112233"
                     />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
@@ -498,7 +584,10 @@ export const PersonForm = () => {
               <Field name="dateOfIssue" validate={correctDate()}>
                 {({ input, meta }) => (
                   <>
-                    <label className="form__label">
+                    <label
+                      className="form__label"
+                      htmlFor="dateOfIssue"
+                    >
                       Коли видано*
                     </label>
                     <input
@@ -506,9 +595,13 @@ export const PersonForm = () => {
                       type="text"
                       className="form__input"
                       placeholder="31.12.1971"
+                      id="dateOfIssue"
                     />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
@@ -521,7 +614,10 @@ export const PersonForm = () => {
               >
                 {({ input, meta }) => (
                   <>
-                    <label className="form__label">
+                    <label
+                      className="form__label"
+                      htmlFor="dateOfExpiry"
+                    >
                       Діє до
                     </label>
                     <input
@@ -529,10 +625,13 @@ export const PersonForm = () => {
                       type="text"
                       className="form__input"
                       placeholder="31.12.1971"
+                      id="dateOfExpiry"
                     />
-                    {values.dateOfIssue
-                    && meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {values.dateOfIssue && meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
@@ -543,19 +642,32 @@ export const PersonForm = () => {
               form__item
               grid__item-1-3"
             >
-              <Field name="authority">
+              <Field
+                name="authority"
+                validate={composeValidators(
+                  required,
+                  minLength(3),
+                )}
+              >
                 {({ input, meta }) => (
                   <>
-                    <label className="form__label">
+                    <label
+                      className="form__label"
+                      htmlFor="authority"
+                    >
                       Ким видано*
                     </label>
                     <input
                       {...input}
                       type="text"
                       className="form__input"
+                      id="authority"
                     />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
@@ -572,7 +684,10 @@ export const PersonForm = () => {
               >
                 {({ input, meta }) => (
                   <>
-                    <label className="form__label">
+                    <label
+                      className="form__label"
+                      htmlFor="unzr"
+                    >
                       Запис № (УНЗР)
                     </label>
                     <input
@@ -580,17 +695,21 @@ export const PersonForm = () => {
                       type="text"
                       className="form__input form__input--after"
                       placeholder="РРРРММДД-ХХХХ"
+                      id="unzr"
                     />
-                    {meta.error && meta.touched
-                    && <p className="form__error">{meta.error}</p>}
+                    {meta.error && meta.touched && (
+                      <p className="form__error">
+                        {meta.error}
+                      </p>
+                    )}
                   </>
                 )}
               </Field>
             </div>
             <div className="grid__item-4-6">
               <p className="form__additional-info">
-                {/* eslint-disable-next-line max-len */}
-                Вкажіть унікальний номер запису в Демографічному реєстрі (Запис №)
+                Вкажіть унікальний номер запису
+                в Демографічному реєстрі (Запис №)
               </p>
             </div>
           </section>

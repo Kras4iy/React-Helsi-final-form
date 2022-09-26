@@ -1,26 +1,25 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Switch from '@mui/material/Switch';
 import './SwitchField.scss';
 
 export const SwitchField = ({ label, isRequired, ...input }) => {
-  const [isHide, setIsHide] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const [placeholderText, setPlaceHoldertext] = useState('');
 
-  const hidebuttonHandle = () => {
-    if (isHide === false) {
+  const handleHideButton = () => {
+    if (isHidden === false) {
       setPlaceHoldertext(`Немає ${label}`);
       input.onChange('');
     } else {
       setPlaceHoldertext('');
     }
 
-    setIsHide(curr => !curr);
+    setIsHidden(curr => !curr);
   };
 
   const makeActive = () => {
-    setIsHide(false);
+    setIsHidden(false);
   };
 
   return (
@@ -35,13 +34,13 @@ export const SwitchField = ({ label, isRequired, ...input }) => {
           type="text"
           className="input__input"
           placeholder={placeholderText}
-          disabled={isHide}
+          disabled={isHidden}
           onClick={makeActive}
         />
         {!isRequired && (
           <Switch
-            checked={!isHide}
-            onChange={hidebuttonHandle}
+            checked={!isHidden}
+            onChange={handleHideButton}
             size="small"
           />
         )}
