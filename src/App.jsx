@@ -1,10 +1,10 @@
 import React from 'react';
-import { PersonForm } from './components/PersonForm/index';
+import { PersonForm } from './components/PersonForm/PersonForm';
 import './App.scss';
 
 export const App = () => (
-  <div className="starter">
-    React starter pack
+  <div className="container">
+    <h2>Дані пацієнта</h2>
     <PersonForm />
   </div>
 );

@@ -2,17 +2,25 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Switch from '@mui/material/Switch';
-import './Input.scss';
+import './SwitchField.scss';
 
-export const Input = ({ label, isRequired, type, ...input }) => {
+export const SwitchField = ({ label, isRequired, ...input }) => {
   const [isHide, setIsHide] = useState(false);
+  const [placeholderText, setPlaceHoldertext] = useState('');
 
   const hidebuttonHandle = () => {
     if (isHide === false) {
+      setPlaceHoldertext(`Немає ${label}`);
       input.onChange('');
+    } else {
+      setPlaceHoldertext('');
     }
 
     setIsHide(curr => !curr);
+  };
+
+  const makeActive = () => {
+    setIsHide(false);
   };
 
   return (
@@ -24,9 +32,11 @@ export const Input = ({ label, isRequired, type, ...input }) => {
         <input
           {...input}
           value={input.value}
-          type={type}
+          type="text"
           className="input__input"
+          placeholder={placeholderText}
           disabled={isHide}
+          onClick={makeActive}
         />
         {!isRequired && (
           <Switch
@@ -40,13 +50,11 @@ export const Input = ({ label, isRequired, type, ...input }) => {
   );
 };
 
-Input.propTypes = {
+SwitchField.propTypes = {
   label: PropTypes.string.isRequired,
   isRequired: PropTypes.bool,
-  type: PropTypes.string,
 };
 
-Input.defaultProps = {
+SwitchField.defaultProps = {
   isRequired: false,
-  type: 'text',
 };

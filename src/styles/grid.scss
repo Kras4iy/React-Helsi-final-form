@@ -1,0 +1,17 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  column-gap: 24px;
+
+  &__item {
+    @for $start from 1 through 24 {
+      @for $end from $start through 24 {
+        &-#{$start}-#{$end} {
+          grid-column: #{$start} / #{$end + 1};
+          align-self: end;
+        }
+      }
+    }
+  }
+
+}
